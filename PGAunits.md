@@ -95,3 +95,41 @@ $$
 L = M\vee V = m\bigl[ (fy\omega-f\dot{y}) e_1 + (f\dot{x}-f\omega x) e_2 + (x\dot{y}-y\dot{x}) e_0 \bigr]
 $$
 I think this is correct.  The dimensions of each term are $[ML^2T^{-1}]$ like we expect.
+
+# Response to Leo's draft
+(Response to Leo's "Physical Geometry" chapter draft, dated 2021.11.18)
+
+In Leo's draft, the ideal plane is represented by $e$ which is $-e_0$ in my notation above.
+(Why the choice of minus sign?)
+Leo handles the units question by assigning a dimension of 1/length to $e$.
+With this choice, points become dimensionless (unit-wise as well as geometrically).
+Extending this, all ideal elements have an extra factor of 1/length compared to their Euclidean counterparts.
+I think (but I need to check) that this will get confusing when we start looking at dual elements.
+
+My objection is that I do not think the basis elements should have dimensional units attached.
+This ties you to a particular measurement system.
+My way of doing things does not apply units until a coordinate system is applied.
+
+## Coordinate-free objects
+I have no objection to anything Leo says here.
+This is independent of the issue of assigning dimensional units.
+Two sanity checks: First, as Leo says, no results should depend on the choice of origin.
+Second, the coordinate-free expressions must be dimensionally consistent with what you get after applying a coordinate system.
+
+## What is projective space?
+I think one of the underlying assumptions is how we describe the projective space and the objects living within it, in contrast to "real" (Euclidean) objects.
+For example, a real point is a dimensionless object.  We can only define its position in relation to another point (e.g. the origin).
+But, what is a point when we map it onto the projective space?  Is it still a dimensionless object?
+Geometrically, the point is a line through some (arbitrary) origin of the embedding space.
+One question is whether this last statement is even necessary.
+Is it necessary to have an embedding space, or is the embedding space just a convenient way to apply coordinates?
+In pure projective geometry the only real quantitative measurement is the cross ratio between 4 co-linear points or coincident lines.
+Projective space is not a metric space.  So, we're really dealing with something different in PGA.  We do have a metric, albeit a degenerate one.
+I suppose nothing should depend on the choice of metric, so long as it has the correct signature (e.g. a nonorthogonal basis or curvilinear basis should give the same results in the end).
+
+Tangent: how curvilinear coordinate systems work.
+
+## Building from planes
+
+
+## Duals, reciprocals, and normalization
