@@ -1,58 +1,53 @@
----
-title: Plotting `clifford` 2D PGA objects with `matplotlib`
-jupyter:
-  jupytext:
-    text_representation:
-      extension: .qmd
-      format_name: quarto
-      format_version: '1.0'
-  kernelspec:
-    display_name: Python (galgebra)
-    language: python
-    name: galgebra
----
+# ---
+# title: Plotting `clifford` 2D PGA objects with `matplotlib`
+# jupyter:
+#   jupytext:
+#     cell_metadata_filter: all,-autoscroll,-collapsed,-scrolled,-trusted,-ExecuteTime
+#     notebook_metadata_filter: kernelspec,jupytext,-jupytext.text_representation.jupytext_version
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#   kernelspec:
+#     display_name: Python (galgebra)
+#     language: python
+#     name: galgebra
+# ---
 
-Ted Corcovilos
-2021-03-09
+# %% [markdown]
+# Ted Corcovilos
+# 2021-03-09
 
-```{python}
-#| cell_style: center
+# %% cell_style="center"
 from clifford import *
-```
 
-```{python}
+# %%
 import numpy as np
-```
 
-```{python}
+# %%
 import matplotlib.pyplot as plt
 from matplotlib.patches import Ellipse
-```
 
-```{python}
-#| tags: []
+# %% tags=[]
 # the widgets seem to be broken for now, so switching to static plots
-%matplotlib inline
-#%matplotlib widget
-```
+# %matplotlib inline
+# #%matplotlib widget
 
-```{python}
+# %%
 import warnings
-```
 
-```{python}
+# %%
 # define 2D PGA
 layout, blades = Cl(2,0,1, firstIdx=0)
 locals().update(blades)
-```
 
-```{python}
+# %%
 # helper functions
 point = lambda x, y, w=1.0 : (x*e1+y*e2+w*e0).dual()
 line = lambda a, b, c: a*e1+b*e2+c*e0
-```
 
-```{python}
+
+# %%
 def rand_line(num=1,length=1.0):
     '''
     generates 'num' random (normalized) lines with maximum moment of 'length'
@@ -68,9 +63,9 @@ def rand_line(num=1,length=1.0):
     else:
         line = [MultiVector(layout,[0,c[i],x[i],y[i],0,0,0,0]) for i in range(num)]
     return(line)
-```
 
-```{python}
+
+# %%
 def rand_point(num=1,length=1.0):
     '''
     generates 'num' random (normalized) lines with maximum moment of 'length'.
@@ -94,12 +89,13 @@ def rand_point(num=1,length=1.0):
     else:
         line = [MultiVector(layout,[0,0,0,0,y[i],-x[i],w,0]) for i in range(num)]
     return(line)
-```
 
-## The plotting function `add_to_axes`
-This draws a PGA object to an existing `matplotlib` axes object. The function classifies the object by geometric type then draws an appropriate representation onto the figure axes.
 
-```{python}
+# %% [markdown]
+# ## The plotting function `add_to_axes`
+# This draws a PGA object to an existing `matplotlib` axes object. The function classifies the object by geometric type then draws an appropriate representation onto the figure axes.
+
+# %%
 def add_to_axes(x,label=None,color='black',axis=None,eps = 1e-6,**kwargs):
     # plot 2D PGA points and lines on a pyplot axis
     # label = point label for drawing
@@ -185,32 +181,30 @@ def add_to_axes(x,label=None,color='black',axis=None,eps = 1e-6,**kwargs):
         # uh oh.  I don't know how to handle this
         # throw a warning and exit
         warnings.warn("Object is not a point or line.  Ignoring.")
-```
 
-## Generate some example objects
+# %% [markdown]
+# ## Generate some example objects
 
-```{python}
+# %%
 # generate 3 points
 A, B, C = rand_point(3,1.0)
 [A,B,C]
-```
 
-```{python}
+# %%
 # calculate (unnormalized) lines between the points
 a = B & C # also `B & C` works
 b = C & A
 c = A & B
 [a,b,c]
-```
 
-```{python}
+# %%
 idealpoint = rand_point(1,0)
 idealline = 1*e0
-```
 
-## Make a plot
+# %% [markdown]
+# ## Make a plot
 
-```{python}
+# %%
 fig = plt.figure(figsize=(6,6))
 ax = fig.add_subplot(1,1,1)
 ax.axis([-1,1,-1,1])
@@ -226,4 +220,3 @@ for XX in [a,b,c]:
 add_to_axes(idealline,label="I",color='black')
 
 fig.show()
-```
