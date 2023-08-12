@@ -1,0 +1,147 @@
+---
+title: 2D PGA in `galgebra`
+jupyter:
+  jupytext:
+    text_representation:
+      extension: .qmd
+      format_name: quarto
+      format_version: '1.0'
+  kernelspec:
+    display_name: 'Python [conda env:galgebra]'
+    language: python
+    name: conda-env-galgebra-py
+---
+
+Here I'm trying to do some symbolic calculations in 2D PGA using the `galgebra` package.
+
+```{python}
+from sympy import *
+from galgebra.ga import Ga
+from galgebra.printer import latex
+from IPython.display import Math
+
+# tell sympy to use our printing by default
+init_printing()
+```
+
+Attempt to generate the algebra for PGA directly:
+
+```{python}
+wxy = (w, x, y) = symbols('w x y', real=True)
+pga2 = Ga('e_0 e_1 e_2', g=[0,1, 1], coords=wxy)
+grad = pga2.grad
+```
+
+```{python}
+# not sure of the best choice here, see docs: 
+# https://galgebra.readthedocs.io/en/latest/generated/galgebra.ga.html?galgebra.ga.Ga.dual_mode
+pga2.dual_mode(mode='+I')
+```
+
+```{python}
+e0, e1, e2 = pga2.mv()
+```
+
+```{python}
+# define some aliases to simplify writing
+e01 = e0*e1; e20=e2*e0; e12=e1*e2; e012=e0*e1*e2
+```
+
+```{python}
+# helper functions
+def point(x, y):
+    return x*e20 + y*e01 + e12
+
+def line(a, b, c):
+    return a*e1+b*e2+c*e0
+```
+
+```{python}
+# Euclidean norm
+def Euc_norm(p):
+    if p.pure_grade() < 0: #not single grade
+        return nan
+    elif p.pure_grade() == 0:
+        return p.get_coefs(0)
+    elif p.pure_grade() == 3:
+        return 0
+    elif p.pure_grade() == 1: # line
+        return sqrt(p.get_coefs(1)[1]**2 + p.get_coefs(1)[2]**2)
+    elif p.pure_grade() == 2: # point
+        return p.get_coefs(2)[2]
+```
+
+```{python}
+# Ideal norm
+def Ideal_norm(p):
+    if p.pure_grade() < 0: #not single grade
+        return nan
+    elif p.pure_grade() == 0:
+        return 0
+    elif p.pure_grade() == 3:
+        return p.get_coefs(3)
+    elif p.pure_grade() == 1: # line
+        return p.get_coefs(1)[0]
+    elif p.pure_grade() == 2: # point
+        return sqrt(p.get_coefs(2)[0]**2 + p.get_coefs(2)[1]**2)
+```
+
+```{python}
+# Euc_normalize
+def Euc_normalize(p):
+    n = Euc_norm(p)
+    if n==nan:
+        return nan
+    return p/n
+```
+
+```{python}
+# define translation and rotation linear operators
+M_trans = lambda x,y: pga2.lt(1+y/2*e20-x/2*e01)
+M_rot = lambda a, p=e12: pga2.lt(cos(a/2)-sin(a/2)*p) # rotation by angle a about point p
+```
+
+```{python}
+L, px, py = symbols("L, px, py", real=True)
+```
+
+```{python}
+s = e0 + x*e1+y*e2+L*e12 + px*e20 + py*e01
+```
+
+```{python}
+s
+```
+
+```{python}
+dx, dy, ω = symbols("dx, dy, ω", real=True)
+```
+
+```{python}
+(1+dx/2*e20 + dy/2*e01)*s*(1-dx/2*e20 -dy/2*e01)
+```
+
+```{python}
+sd = L*e0 + px*e1+py*e2+e12 + x*e20 + y*e01
+```
+
+```{python}
+(1+dy/2*e20 - dx/2*e01)*sd*(1-dy/2*e20 +dx/2*e01)
+```
+
+```{python}
+from galgebra.mv import Mv
+```
+
+```{python}
+out = Mv(ga=pga2)
+print([i for i in s.blade_coefs()])
+```
+
+```{python}
+(~s).blade_coefs()[::-1]
+```
+
+```{python}
+pga2.indexes_lst
+```
